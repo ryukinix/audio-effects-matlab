@@ -2,25 +2,26 @@ function [ out ] = Delay( in, depth, delay, feedback, fs)
 %DELAY Summary of this function goes here
 %
 % VARIÁVEIS:
-%   IN - input guitar audio vector
-%   DEPTH - 0 (no delay sig added) to 1 (equal amplitude delay signal)
-%   DELAY - delay time from 0.1 msec (0.0001 sec) to 8 sec (in seconds)
-%   FEEDBACK - feedback gain - amplitude of delayed signal to be fedback
-%            - should be 0 < f < 1
+%   IN - input -> audio da guitarra como vetor coluna 
+%   DEPTH - 0 (sem sinal delay adicionado) a 1 (amplitude do sinal
+%   igual )
+%   DELAY - tempo de delay: de 0.1 milisegundos (0.0001 seg) a 8 seg (e seg)
+%   FEEDBACK - ganho de feedback - amplitude do sinal defasado para
+%              servir de feedback should be 0 < f < 1
 
     dbstop if error
 
-    sampleDelay = ceil(delay*fs); % delay in sec * samp/sec = samples
+    sampleDelay = ceil(delay*fs); % delay em sec * samp/sec = samples
     delayedSignal = [zeros(sampleDelay,1);in(1:end);zeros(64*fs-sampleDelay,1)];
-    % first delay by padding beginning with proper # zeros
-    % then zero pad the end of the delayed signal for the rest of the delays
-    % that come from feedback
-    % below, in is also padded with the same # zeros to handle longer delay
-    % times
+    % primeiro delay no começo preenchendo com zeros
+    % então o final do preenchimento do sinal defasado no resto dos
+    % sinais defasados que irão vir por feedback
+    % abaixo, está também preenchido com o mesmo número de zeros
+    % para lidar com longos tempos de delay
     in=[in;zeros(64*fs,1)];
 
-    n=1; %iterator variable for # delays
-    while feedback >= 0.0001 %going to continually decrease feedback inside loop
+    n=1; %variável de iteração para número de delays
+    while feedback >= 0.0001 % decrescer continuamente o feedbck no
         delayedSignal=delayedSignal+...
             feedback*[zeros(sampleDelay*n,1);...
             delayedSignal(1:end-sampleDelay*n)];
@@ -30,7 +31,7 @@ function [ out ] = Delay( in, depth, delay, feedback, fs)
 
     out = in + depth*delayedSignal;
 
-    % removing excess zeros from the end
+    % removendo excesso de zeros no fim
     content = find(out,1,'last');
     out = out(1:content);
 
