@@ -45,8 +45,7 @@ também de alguns gêneros musicais, como os derivados do Rock, Blues e
 Jazz. Entre vários instrumentos, incluindo sintetizadores, um
 instrumento muito popular a usar esse tipo de recurso são as guitarras
 elétricas, como efeitos para distorcer o sinal eletroacústico para dar
-um carácter mais vivo a solistas com sons similares, de uma maneira
-grosseira, a violinos.
+um carácter mais vivo a solistas com sons tão vivos como os violinos.
 
 Para a construção desses filtros existem duas abordagem clássicas:
 1. Processamento de Áudio Analógico
@@ -96,9 +95,9 @@ eco no som.
 A ideia por trás de um filtro delay é ter réplicas defasadas das
 mesmas amostras somadas ao sinal de origem. Dessa maneira, pode-se
 iludir a percepção que existe mais de uma pessoa tocando tal como
-criar melodias irreproduzíveis diretamente. Um bom exemplo de
-música popular que usa Delay é o riff [fn:2] da música da banda
-americana /Guns N' Roses/ /Welcome to The Jungle/
+criar melodias complexas com a ideia de delay. Um bom exemplo de
+música popular que usa Delay é o riff [fn:2] na música /Welcome to The
+Jungle/ da banda americana /Guns N' Roses/ .
 
 Em geral, o esquema relacionado de um filtro delay pode ser resumido
 de uma maneira simplória como a seguir:
@@ -127,7 +126,7 @@ característica, algo especial ocorre nesse caso. Esse efeito é
 conhecido como /Clipping/, obstruindo o ganho de um sinal truncando
 sua magnitude.  Ao sobrepor esse sinal no tempo, ainda temos as mesmas
 frequências, mas a amplitude está distorcida, o que dá esse carácter
-especial.
+especial no áudio.
 
 
 #+ATTR_LATEX: :placement [H]
@@ -156,7 +155,7 @@ altas frequências.
 Intuitivamente, Flanging é quando a distancia entre a fonte sonora, a
 área refletora e o ouvinte varia, o filtro pente desliza para cima e
 para baixo no espectro das frequências, produzindo um efeito
-característico. O exemplo mais comum e o da decolagem de um avião a
+característico. O exemplo mais comum é o da decolagem de um avião a
 jato.
 
 O uso desse efeito em musica foi acidentalmente inventado durante uma
@@ -175,14 +174,13 @@ milissegundos.
 #+CAPTION: Espectro da frequência comparativa entre o efeito de Flanging e uma mudança de fase (Phasing)
 [[./pics/flanging.png]]
 
-Diferentemente do Phasing que muda de forma fixa as frequências, um
-filtro Flanger o faz de forma gradual.
-
 * Resultados
 
-A seguir segue alguns gráficos demonstrando o uso dos três filtros em
-amostras de sons de guitarra com seu respectivo sinal no tempo e a
-Transformada de Fourier.
+Nessa seção está descrito alguns gráficos demonstrando o uso dos três
+filtros em amostras de um mesmo som de guitarra com seu respectivo
+sinal no tempo e as suas Transformada de Fourier. Esses gráficos foram
+gerados a partir da aplicação com interface gráfica criada apenas para
+essa simulação.
 
 #+ATTR_LATEX: :placement [H]
 #+CAPTION: Um arranjo de guitarra gravado sem qualquer tipo de efeito, usado como base para as aplicações de filtros a seguir.
@@ -209,13 +207,14 @@ Transformada de Fourier.
 
 Como pode-se perceber com essa mera simulação, o poder da aplicação de
 Processamento Digital de Sinais na música é muito relevante e o
-conhecimento teórico nessa área permite um arsenqal de técnicas
+conhecimento teórico nessa área permite um arsenal de técnicas
 diferentes para criar muitos tipos de efeitos sonoros musicais.
 
 Uma extensão para esse trabalho poderia ser feita em relação a
 adicionar mais filtros a aplicação, tal como planejar um sistema de
 tempo-real embarcado para o uso na vida prática, como sugestão
-usando Raspberry PI e Arduino.
+usando Raspberry Pi e Arduino. Isso seria basicamente implementar, de
+fato, uma pedaleira digital.
 
 * Referências
 
