@@ -22,7 +22,7 @@ function varargout = Gui(varargin)
 
 % Edit the above text to modify the response to help Gui
 
-% Last Modified by GUIDE v2.5 06-Dec-2017 02:59:27
+% Last Modified by GUIDE v2.5 06-Dec-2017 03:35:03
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -106,13 +106,23 @@ function carregarButton_Callback(hObject, eventdata, handles)
 % hObject    handle to carregarButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+global x Fs;
+[filename, filepath]= uigetfile({'*.wav','WAV Files'}, 'Selecione um áudio wav');
+if (filename ~= 0)
+    [x, Fs] = LoadAudio([filepath filename]);
+    updateAxes(handles);
+    updateAxesFiltered(handles);
+end
 
 % --- Executes on button press in reproduzirButton.
 function reproduzirButton_Callback(hObject, eventdata, handles)
 % hObject    handle to reproduzirButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+global x Fs;
+y = applyFilters(handles);
+clear sound;
+sound(y, Fs);
 
 
 % --- Executes on button press in pausarbutton.
@@ -120,7 +130,7 @@ function pausarButton_Callback(hObject, eventdata, handles)
 % hObject    handle to pausarbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+clear sound;
 
 % --- Executes on button press in flangerButton.
 function flangerButton_Callback(hObject, eventdata, handles)
@@ -129,7 +139,7 @@ function flangerButton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of flangerButton
-
+updateAxesFiltered(handles);
 
 % --- Executes on button press in distortionButton.
 function distortionButton_Callback(hObject, eventdata, handles)
@@ -138,6 +148,7 @@ function distortionButton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of distortionButton
+updateAxesFiltered(handles);
 
 % --- Executes on button press in distortionButton.
 function delayButton_Callback(hObject, eventdata, handles)
@@ -146,7 +157,7 @@ function delayButton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of distortionButton
-
+updateAxesFiltered(handles);
 
 % --- Executes on slider movement.
 function delayDepthSlider_Callback(hObject, eventdata, handles)
@@ -156,7 +167,7 @@ function delayDepthSlider_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-
+updateAxesFiltered(handles);
 
 % --- Executes during object creation, after setting all properties.
 function delayDepthSlider_CreateFcn(hObject, eventdata, handles)
@@ -178,7 +189,7 @@ function delayDelaySlider_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-
+updateAxesFiltered(handles);
 
 % --- Executes during object creation, after setting all properties.
 function delayDelaySlider_CreateFcn(hObject, eventdata, handles)
@@ -200,7 +211,7 @@ function delayFeedbackSlider_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-
+updateAxesFiltered(handles);
 
 % --- Executes during object creation, after setting all properties.
 function delayFeedbackSlider_CreateFcn(hObject, eventdata, handles)
@@ -222,7 +233,7 @@ function flangerMixSlider_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-
+updateAxesFiltered(handles);
 
 % --- Executes during object creation, after setting all properties.
 function flangerMixSlider_CreateFcn(hObject, eventdata, handles)
@@ -244,7 +255,7 @@ function flangerDelaySlider_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-
+updateAxesFiltered(handles);
 
 % --- Executes during object creation, after setting all properties.
 function flangerDelaySlider_CreateFcn(hObject, eventdata, handles)
@@ -266,7 +277,7 @@ function flangerWidthSlider_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-
+updateAxesFiltered(handles);
 
 % --- Executes during object creation, after setting all properties.
 function flangerWidthSlider_CreateFcn(hObject, eventdata, handles)
@@ -288,7 +299,7 @@ function flangerRateSlider_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-
+updateAxesFiltered(handles);
 
 % --- Executes during object creation, after setting all properties.
 function flangerRateSlider_CreateFcn(hObject, eventdata, handles)
@@ -310,7 +321,7 @@ function distortionGainSlider_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-
+updateAxesFiltered(handles);
 
 % --- Executes during object creation, after setting all properties.
 function distortionGainSlider_CreateFcn(hObject, eventdata, handles)
@@ -333,7 +344,7 @@ function distortionToneSlider_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-
+updateAxesFiltered(handles);
 
 % --- Executes during object creation, after setting all properties.
 function distortionToneSlider_CreateFcn(hObject, eventdata, handles)
@@ -344,4 +355,61 @@ function distortionToneSlider_CreateFcn(hObject, eventdata, handles)
 % Hint: slider controls usually have a light gray background.
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+function updateAxes(handles)
+global x;
+axes(handles.axes1); %set the current axes to axes2
+plot(x);
+[w, H] = loadFFT(x);
+axes(handles.axes2);
+plot(w, H);
+
+
+function [w, H] = loadFFT(x)
+global Fs;
+w = linspace(-Fs/2, Fs/2, length(x));
+H = abs(fftshift(fft(x)));
+
+
+function [y] = applyFilters(handles)
+global x Fs;
+y = x;
+distortion = get(handles.distortionButton, 'Value');
+flanger = get(handles.flangerButton, 'Value');
+delay = get(handles.delayButton, 'Value');
+if distortion == 1
+    gain = get(handles.distortionGainSlider, 'Value');
+    tone = get(handles.distortionToneSlider, 'Value');
+    y = Distortion(y, gain, tone, Fs);
+end
+
+if flanger == 1
+    mix = get(handles.flangerMixSlider, 'Value');
+    delay = get(handles.flangerDelaySlider, 'Value');
+    width = get(handles.flangerWidthSlider, 'Value');
+    rate = get(handles.flangerRateSlider, 'Value');
+    y = Flanger(y, mix, delay, width, rate, Fs);
+end
+
+if delay == 1
+    depth = get(handles.delayDepthSlider, 'Value');
+    delay = get(handles.delayDelaySlider, 'Value');
+    feedback = get(handles.delayFeedbackSlider, 'Value');
+    y = Delay(y, depth, delay, feedback, Fs);
+end
+
+
+function updateAxesFiltered(handles)
+global x;
+y = applyFilters(handles);
+
+if length(x) ~= (length(y)) || ~isequal(x,y)
+    axes(handles.axes1); %set the current axes to axes2
+    plot(y, '--r');
+    [w, H] = loadFFT(y);
+    axes(handles.axes2);
+    plot(w, H, '--r');
+else
+    updateAxes(handles);
 end
