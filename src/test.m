@@ -1,8 +1,8 @@
-
+addpath('wav');
 %% Distortion
 [x Fs] = audioread('lead.wav');
-gain = 5; % ganho em relação ao audio original (amplificador) (0-11)
-tone = 0; % realça agudos (0-1)
+gain = 5; % ganho em relaÃ§Ã£o ao audio original (amplificador) (0-11)
+tone = 1; % realÃ§a agudos (0-1)
 y = Distortion(x, gain, tone, Fs);
 sound(y, Fs);
 

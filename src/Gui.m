@@ -107,7 +107,7 @@ function carregarButton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global x Fs;
-[filename, filepath]= uigetfile({'*.wav','WAV Files'}, 'Selecione um áudio wav');
+[filename, filepath]= uigetfile({'*.wav','WAV Files'}, 'Selecione um ï¿½udio wav');
 if (filename ~= 0)
     [x, Fs] = LoadAudio([filepath filename]);
     updateAxes(handles);

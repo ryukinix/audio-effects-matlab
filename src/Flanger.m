@@ -1,14 +1,14 @@
 function [out] = Flanger(in,mix,delay,width,rate,fs)
 %FLANGER simulates a guitar flanger effect pedal
 %
-% VARI¡VEIS:
+% VARI√ÅVEIS:
 %   IN - vetor coluna de entrada representando um audio
 %   MIX - depth - amplitude do sinal atrasado adicionado em input (0 a 1)
-%   DELAY - tempo de delay mÌnimo - 100usec to 10msec (in msec) 0.1 to 10
-%   WIDTH - sweep depth - qu„o largo a troca È (100nsec to 10msec) 
+%   DELAY - tempo de delay m√≠nimo - 100usec to 10msec (in msec) 0.1 to 10
+%   WIDTH - sweep depth - qu√£o largo a troca √© (100nsec to 10msec) 
 %           (in msec, 0.0001)
-%   RATE - frequÍncia do Oscilador de Baixa FrequÍncia (LFO) - 0.05 to 5 Hz
-%     FS - FrequÍncia de Amostragem
+%   RATE - frequ√™ncia do Oscilador de Baixa Frequ√™ncia (LFO) - 0.05 to 5 Hz
+%     FS - Frequ√™ncia de Amostragem
 
     in=interp1(1:length(in),in,1:.25:length(in));
     fsn=fs*4;

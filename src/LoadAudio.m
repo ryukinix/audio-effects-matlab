@@ -1,9 +1,11 @@
 function [ y Fs ] = LoadAudio( fname )
-%LOADAUDIO FunÁ„o de compatibilidade entre MATLAB 2012~2017
-%   FunÁ„o wavread n„o est· presente mais na vers„o 2016+
-%   FunÁ„o audioread n„o rest· presente em 2012
+%LOADAUDIO Fun√ß√£o de retrocompatibilidade entre MATLAB 2012~2017
+%   Fun√ß√£o wavread n√£o est√° presente mais na vers√£o 2016+
+%   Fun√ß√£o audioread n√£o rest√° presente em 2012
 
-    [y Fs] = audioread(fname);
-
+    if ~ exist('wavread', 'file')
+        wavread = @(f) audioread(f);
+    end
+    [y Fs] = wavread(fname);
 end
 

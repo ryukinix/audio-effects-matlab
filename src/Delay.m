@@ -1,7 +1,7 @@
 function [ out ] = Delay( in, depth, delay, feedback, fs)
 %DELAY Summary of this function goes here
 %
-% VARI¡VEIS:
+% VARI√ÅVEIS:
 %   IN - input guitar audio vector
 %   DEPTH - 0 (no delay sig added) to 1 (equal amplitude delay signal)
 %   DELAY - delay time from 0.1 msec (0.0001 sec) to 8 sec (in seconds)
