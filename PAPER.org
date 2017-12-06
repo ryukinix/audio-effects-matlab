@@ -1,7 +1,7 @@
 #+STARTUP: showall align
 #+OPTIONS: todo:nil tasks:("IN-PROGRESS" "DONE") tags:nil
 #+AUTHOR: Manoel Vilela
-#+TITLE: Primeiro titutlo @@latex:\\@@ SEgundo titutlo
+#+TITLE: Processamento Digital de Sinais @@latex:\\@@ Efeitos Sonoros na Música
 #+EXCLUDE_TAGS: TOC_3
 #+LANGUAGE: bt-br
 #+LATEX_HEADER: \usepackage[]{babel}
@@ -12,8 +12,13 @@
 
 #+BEGIN_ABSTRACT
 
-Descreva aqui o resumo
-
+Este documento descreve a implementação de alguns filtros voltados
+para processamento de áudio e efeitos sonoros. Especificamente, alguns
+efeitos muito usados em guitarras elétricas nas músicas
+contemporâneas. As técnicas citadas envolvem a disciplina de
+Processamento Digital de Sinais envolvidas durante o curso apresentado
+pelo professor Carlos Alexandre Rolim na Universidade Federal do Ceará
+em 2017.2.
 #+END_ABSTRACT
 #+TOC: headlines=2
 
@@ -23,19 +28,208 @@ Descreva aqui o resumo
 :CUSTOM_ID: toc-org
 :END:
 - [[#introdução][Introdução]]
+- [[#técnicas][Técnicas]]
+  - [[#delay][Delay]]
+  - [[#distorção][Distorção]]
+  - [[#flanger][Flanger]]
+- [[#resultados][Resultados]]
+- [[#conclusão][Conclusão]]
+- [[#referências][Referências]]
 - [[#apêndice][Apêndice]]
-  - [[#gráfico-1][Gráfico 1]]
-  - [[#gráfico-2][Gráfico 2]]
 
 * Introdução
 
-* Apêndice
-** Gráfico 1
-#+ATTR_LATEX: :height 15cm :placement [H]
-[[./pics/nlp.png]]
+O uso de efeitos via processamento de áudio nas músicas contemporâneas
+tem crescido nas últimas décadas desde a ascenção da eletrônica como
+também de alguns gêneros musicais, como os derivados do Rock, Blues e
+Jazz. Entre vários instrumentos, incluindo sintetizadores, um
+instrumento muito popular a usar esse tipo de recurso são as guitarras
+elétricas, como efeitos para distorcer o sinal eletroacústico para dar
+um carácter mais vivo a solistas com sons similares, de uma maneira
+grosseira, a violinos.
+
+Para a construção desses filtros existem duas abordagem clássicas:
+1. Processamento de Áudio Analógico
+2. Processamento de Áudio Digital
 
 
-** Gráfico 2
+Embora (1) seja muito poderoso e riquíssimo em qualidade, como
+amplificadores valvulados, nos últimos anos entre vários músicos
+tem-se tornado muito popular a versão digital desses filtros por conta da
+versatilidade de encontrar num único dispositivo computacional, como
+uma /pedaleira digital/ [fn:1], uma vasta capacidade de incluir
+de simuladores de amplificadores valvulados e analógicos, como inúmeros
+efeitos de filtros de sinais. O que contribui positivamente para a
+versabilidade do músico, um custo menor e também portabilidade do equipamento.
+
+O embasamento das técnicas envolvidas para tais projetos e produtos,
+tem coma a teoria conhecida por: Processamento Digital de Sinais --
+ou Digital Siginal Processing (DSP) em inglês.
+
+Este relatório descreve os resultados de uma implementação de três
+filtros digitais usado comumente em guitarras elétricas usando a
+plataforma MATLAB. O código está disponível online livremente e pode
+ser conferido no apêndice.
+
+[fn:1] uma pedaleira digital é um dispositivo de computação embarcada
+que engloba um conjunto de simuladores de amplificadores analógicos e
+filtros digitais para processamento de áudio, geralmente usado por
+guitarristas como uma solução integradora dos pedais analógicos individuais.
+
+* Técnicas
+
+As técnicas apresentadas serão os filtros digitais usados para
+guitarras:
+
+1. Delay
+2. Distorção
+3. Flanger
+
+** Delay
+
+Delay é uma palavra inglesa que em português significa atraso. Este
+atraso é um efeito acústico muito simples que consiste em reproduzir
+uma réplica de um pico de ondas sonoras com um determinado tempo de
+atraso do pico de ondas sonoras original. Isto funciona como que um
+eco no som.
+
+A ideia por trás de um filtro delay é ter réplicas defasadas das
+mesmas amostras somadas ao sinal de origem. Dessa maneira, pode-se
+iludir a percepção que existe mais de uma pessoa tocando tal como
+criar melodias irreproduzíveis diretamente. Um bom exemplo de
+música popular que usa Delay é o riff [fn:2] da música da banda
+americana /Guns N' Roses/ /Welcome to The Jungle/
+
+Em geral, o esquema relacionado de um filtro delay pode ser resumido
+de uma maneira simplória como a seguir:
 
 #+ATTR_LATEX: :placement [H]
-[[./pics/dsp.png]]
+#+CAPTION: Um sistema de delay alimentado por feedback, replicando as próprias amostradas defasadas pelo tempo com um determinado ganho definido pelo feedback.
+[[./pics/delay.png]]
+
+
+
+[fn:2] Jargão geralmente usados por guitarristas para denotar um
+arranjo musical executado repetitivamente como uma chave de uma música.
+
+** Distorção
+
+Historicamente, a distorção de sinais ocorreu como um acidente ao
+sobrecarregar o ganho (volume) de um amplificador além do limite
+especificado. No entanto, músicos notaram que aquele som
+característico poderia ser de fato algo desejável e de 1942 até hoje,
+através principalmente do /Blues/, esse tipo de efeito em guitarras se
+tornou extremamente popular em diversos gêneros musicais.
+
+A distorção de um sinal pode ocorrer de várias maneiras, no entanto,
+para preservarmos as frequências fundamentais do sinal como sua
+característica, algo especial ocorre nesse caso. Esse efeito é
+conhecido como /Clipping/, obstruindo o ganho de um sinal truncando
+sua magnitude.  Ao sobrepor esse sinal no tempo, ainda temos as mesmas
+frequências, mas a amplitude está distorcida, o que dá esse carácter
+especial.
+
+
+#+ATTR_LATEX: :placement [H]
+#+CAPTION: Um sinal senoidal e os tipos de clipping possíveis, sendo do qual /Soft Clipping/ uma distorção mais suavizada e /Hard Clipping/ mais agressiva.
+[[./pics/clipping.jpg]]
+
+Em geral, o algoritmo implementado para realizar um efeito de distorção segue os
+seguintes passos:
+
+1. Normalizar o sinal pela energia ou potência
+2. Aplicar ganho
+3. Aplicar não-linearidade
+4. Modelar a tonalidade para enfatizar mais agudos ou graves
+
+A respeito do (3) isso é usado diretamente através de amplificadores
+operacionais, transistores, no entanto nessa implementação apenas
+usei uma função não-linear qualquer como a função \(erf\) (função erro)
+
+No passo (4) é usado um filtro passa-faixa de acordo com os parâmetros
+de tonalidade para enfatizar a distorção nas baixas frequências ou
+altas frequências.
+
+
+** Flanger
+
+Intuitivamente, Flanging é quando a distancia entre a fonte sonora, a
+área refletora e o ouvinte varia, o filtro pente desliza para cima e
+para baixo no espectro das frequências, produzindo um efeito
+característico. O exemplo mais comum e o da decolagem de um avião a
+jato.
+
+O uso desse efeito em musica foi acidentalmente inventado durante uma
+gravação dos Beatles em 1967, quando um mesmo sinal de áudio estava
+sendo reproduzido por dois gravadores de fita mal sincronizados. Isso
+provocou atrasos variáveis entre eles e levou a descoberta da maneira
+de se obter o efeito. Na bateria da segunda parte de "Lucy in the Sky
+with Diamonds" isso pode ser conferido.
+
+Tecnicamente, um /Flanger/ é um efeito de áudio produzido por mixar
+dois sinais idênticos juntos, no entanto um dos sinais é atrasado por
+uma pequena e gradual mudança de período, usualmente menor que 20
+milissegundos.
+
+#+ATTR_LATEX: :placement [H]
+#+CAPTION: Espectro da frequência comparativa entre o efeito de Flanging e uma mudança de fase (Phasing)
+[[./pics/flanging.png]]
+
+Diferentemente do Phasing que muda de forma fixa as frequências, um
+filtro Flanger o faz de forma gradual.
+
+* Resultados
+
+A seguir segue alguns gráficos demonstrando o uso dos três filtros em
+amostras de sons de guitarra com seu respectivo sinal no tempo e a
+Transformada de Fourier.
+
+#+ATTR_LATEX: :placement [H]
+#+CAPTION: Um arranjo de guitarra gravado sem qualquer tipo de efeito, usado como base para as aplicações de filtros a seguir.
+[[./pics/exemplo-puro.png]]
+
+#+ATTR_LATEX: :placement [H]
+#+CAPTION: Exemplo de aplicação de um Delay no sinal de origem, como é possível perceber, outras amostras de si mesmo no tempo estão intercabeadas no sinal.
+[[./pics/exemplo-delay.png]]
+
+#+ATTR_LATEX: :placement [H]
+#+CAPTION: Exemplo de aplicação do filtro de distorção para um ganho médio e entonação nas altas frequências
+[[./pics/exemplo-distortion.png]]
+
+#+ATTR_LATEX: :placement [H]
+#+CAPTION: Exemplo de aplicação do filtro de distorção para um ganho alto e entonação nas baixas frequências
+[[./pics/exemplo-distortion2.png]]
+
+#+ATTR_LATEX: :placement [H]
+#+CAPTION: Exemplo da aplicação de flanger, como se pode perceber pequenas alterações graduais a cada periodo é feito, como se fosse uma "sombra" do sinal.
+[[./pics/exemplo-flanger.png]]
+
+
+* Conclusão
+
+Como pode-se perceber com essa mera simulação, o poder da aplicação de
+Processamento Digital de Sinais na música é muito relevante e o
+conhecimento teórico nessa área permite um arsenqal de técnicas
+diferentes para criar muitos tipos de efeitos sonoros musicais.
+
+Uma extensão para esse trabalho poderia ser feita em relação a
+adicionar mais filtros a aplicação, tal como planejar um sistema de
+tempo-real embarcado para o uso na vida prática, como sugestão
+usando Raspberry PI e Arduino.
+
+* Referências
+
+- Rubin, D. (2007). Inside the Blues: 1942 to 1982. Hal Leonard
+- Oppenheim, Alan V., Schafer, Ronald W. & Buck, John
+  R. (1999). Discrete-time Signal Processing (2Nd Ed.). Prentice-Hall,
+  Inc.
+- Creating an Audio Chorus Effects, acesso em 6 de dezembro de 2017:
+  http://www.danpprince.com/engineering/matlab-chorus/
+- Guitar Effects project for Music & Engineering, Fall 2012 at Cooper
+  Union, acesso em 6 de dezembro de 2017:
+  https://github.com/luster/guitar-effects
+
+
+* Apêndice
+
+Repositório online: https://github.com/ryukinix/audio-effects-matlab
