@@ -22,7 +22,7 @@ function varargout = Gui(varargin)
 
 % Edit the above text to modify the response to help Gui
 
-% Last Modified by GUIDE v2.5 06-Dec-2017 03:35:03
+% Last Modified by GUIDE v2.5 06-Dec-2017 20:45:56
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -361,15 +361,19 @@ function updateAxes(handles)
 global x;
 axes(handles.axes1); %set the current axes to axes2
 plot(x);
+xlabel('Tempo (s)');
+ylabel('Magnitude');
 [w, H] = loadFFT(x);
 axes(handles.axes2);
 plot(w, H);
+ylabel('log Db')
+xlabel('Frequência normalizada em pi (rad/s)');
 
 
 function [w, H] = loadFFT(x)
 global Fs;
 w = linspace(-Fs/2, Fs/2, length(x));
-H = abs(fftshift(fft(x)));
+H = 20*log10(abs(fftshift(fft(x))));
 
 
 function [y] = applyFilters(handles)
@@ -407,9 +411,20 @@ y = applyFilters(handles);
 if length(x) ~= (length(y)) || ~isequal(x,y)
     axes(handles.axes1); %set the current axes to axes2
     plot(y, '--r');
+    xlabel('Tempo (s)');
+    ylabel('Magnitude');
     [w, H] = loadFFT(y);
     axes(handles.axes2);
     plot(w, H, '--r');
+    ylabel('log Db')
+    xlabel('Frequência normalizada em pi (rad/s)');
 else
     updateAxes(handles);
 end
+
+
+% --- Executes on button press in salvarButton.
+function salvarButton_Callback(hObject, eventdata, handles)
+% hObject    handle to salvarButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
